@@ -9,30 +9,39 @@ import {
 } from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 
-const LoginScreen = ({ navigation }: any) => {
-  const { login } = useAuth();
+const SignupScreen = ({ navigation }: any) => {
+  const { signup } = useAuth();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [secure, setSecure] = useState(true);
 
-  const onLogin = async () => {
-    if (!email || !password) {
+  const onSignup = async () => {
+    if (!name || !email || !password) {
       Alert.alert('Error', 'All fields are required.');
       return;
     }
 
-    const result = await login({ email, password });
-
-    if (result) {
-      Alert.alert('Login Failed', result);
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters.');
+      return;
     }
+
+    await signup({ name, email, password });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
+      <Text style={styles.title}>Create Account</Text>
+
+      <TextInput
+        placeholder="Full Name"
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+      />
 
       <TextInput
         placeholder="Email"
@@ -55,18 +64,18 @@ const LoginScreen = ({ navigation }: any) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={onLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TouchableOpacity style={styles.button} onPress={onSignup}>
+        <Text style={styles.buttonText}>Signup</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.link}>Go to Signup</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.link}>Go to Login</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default LoginScreen;
+export default SignupScreen;
 
 const styles = StyleSheet.create({
   container: {

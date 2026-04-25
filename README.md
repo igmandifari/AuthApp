@@ -1,79 +1,144 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# AuthApp
+
+A React Native Authentication App built using **React Native CLI**, **TypeScript**, **React Context API**, **React Navigation**, and **AsyncStorage**.
+
+This project was created as an assignment to demonstrate authentication flow, state management, navigation handling, and clean UI implementation.
+
+---
+
+# Features
+
+## Authentication Flow
+
+* User Signup
+* User Login
+* Logout functionality
+* Persist login session using AsyncStorage
+* Auto redirect based on login status
+
+## Screens
+
+* Login Screen
+* Signup Screen
+* Home Screen
+
+## UI / UX
+
+* Clean modern interface
+* Password show / hide toggle
+* Loading state on login
+* Inline validation messages
+* Responsive layout
+
+---
+
+# Tech Stack
+
+* React Native CLI
+* TypeScript
+* React Context API
+* React Navigation
+* AsyncStorage
+* React Hooks
+
+---
+
+# Project Structure
+
+```bash
+src/
+├── components/
+├── context/
+│   └── AuthContext.tsx
+├── hooks/
+│   └── useAuth.ts
+├── navigation/
+│   └── RootNavigator.tsx
+├── screens/
+│   ├── LoginScreen.tsx
+│   ├── SignupScreen.tsx
+│   └── HomeScreen.tsx
+└── App.tsx
+```
+
+---
 
 # Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
-
-## Step 1: Start the Metro Server
-
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
+## 1. Clone Repository
 
 ```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+git clone <your-repo-url>
+cd AuthApp
 ```
 
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
+## 2. Install Dependencies
 
 ```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+npm install
 ```
 
-### For iOS
+## 3. Run Android
 
 ```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+npx react-native run-android
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## 4. Run iOS
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+```bash
+cd ios
+pod install
+cd ..
+npx react-native run-ios
+```
 
-## Step 3: Modifying your App
+---
 
-Now that you have successfully run the app, let's modify it.
+# Demo Flow
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+## Signup
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+Create new account using:
 
-## Congratulations! :tada:
+* Full Name
+* Email
+* Password
 
-You've successfully run and modified your React Native App. :partying_face:
+## Login
 
-### Now what?
+Login using registered account credentials.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+## Home
 
-# Troubleshooting
+Displays:
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+* User Name
+* User Email
 
-# Learn More
+Logout button returns user to Login screen.
 
-To learn more about React Native, take a look at the following resources:
+---
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+# Storage
+
+User authentication session is stored locally using AsyncStorage so users remain logged in after app restart.
+
+---
+
+# Improvements (Future Scope)
+
+* API integration
+* Secure token storage
+* Dark mode
+* Forgot password
+* Unit testing
+* Biometric login
+
+---
+
+# Author
+
+Developed by Igman Difari
+
+---

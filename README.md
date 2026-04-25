@@ -34,12 +34,16 @@ This project was created as an assignment to demonstrate authentication flow, st
 
 # Tech Stack
 
-* React Native CLI
+* Node.js 18.20.4
+* React Native CLI 0.74.5
 * TypeScript
+* React 18
 * React Context API
 * React Navigation
 * AsyncStorage
 * React Hooks
+* Android Studio
+* Xcode (for iOS)
 
 ---
 

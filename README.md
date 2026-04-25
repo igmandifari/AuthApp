@@ -100,6 +100,7 @@ npx react-native run-ios
 ---
 
 # Demo Flow
+https://github.com/user-attachments/assets/d0feffbd-777a-4464-9af4-341562ddcdc1
 
 ## Signup
 

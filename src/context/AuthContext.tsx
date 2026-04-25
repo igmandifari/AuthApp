@@ -53,52 +53,77 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signup = async (data: SignupPayload) => {
-    const account = {
+    const raw = await AsyncStorage.getItem(ACCOUNT_KEY);
+  
+    const accounts = raw ? JSON.parse(raw) : [];
+  
+    const exists = accounts.find(
+      (item: any) =>
+        item.email === data.email.toLowerCase(),
+    );
+  
+    if (exists) {
+      return 'Email already registered.';
+    }
+  
+    const newAccount = {
       name: data.name,
       email: data.email.toLowerCase(),
       password: data.password,
     };
-
-    await AsyncStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
-
+  
+    accounts.push(newAccount);
+  
+    await AsyncStorage.setItem(
+      ACCOUNT_KEY,
+      JSON.stringify(accounts),
+    );
+  
     const sessionUser = {
-      name: account.name,
-      email: account.email,
+      name: newAccount.name,
+      email: newAccount.email,
     };
-
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(sessionUser));
+  
+    await AsyncStorage.setItem(
+      USER_KEY,
+      JSON.stringify(sessionUser),
+    );
+  
     setUser(sessionUser);
-
+  
     return null;
   };
 
   const login = async (data: LoginPayload) => {
     const raw = await AsyncStorage.getItem(ACCOUNT_KEY);
-
-    if (!raw) {
-      return 'Account not found. Please signup first.';
-    }
-
-    const account = JSON.parse(raw);
-
-    if (
-      account.email !== data.email.toLowerCase() ||
-      account.password !== data.password
-    ) {
+  
+    const accounts = raw ? JSON.parse(raw) : [];
+  
+    const found = accounts.find(
+      (item: any) =>
+        item.email === data.email.toLowerCase() &&
+        item.password === data.password,
+    );
+  
+    if (!found) {
       return 'Incorrect email or password.';
     }
-
+  
     const sessionUser = {
-      name: account.name,
-      email: account.email,
+      name: found.name,
+      email: found.email,
     };
-
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(sessionUser));
+  
+    await AsyncStorage.setItem(
+      USER_KEY,
+      JSON.stringify(sessionUser),
+    );
+  
     setUser(sessionUser);
-
+  
     return null;
   };
-
+  
   const logout = async () => {
     await AsyncStorage.removeItem(USER_KEY);
     setUser(null);

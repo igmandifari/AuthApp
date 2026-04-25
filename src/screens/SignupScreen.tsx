@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 
@@ -17,19 +18,44 @@ const SignupScreen = ({ navigation }: any) => {
   const [password, setPassword] = useState('');
 
   const [secure, setSecure] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
 
   const onSignup = async () => {
+    setError('');
+  
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
     if (!name || !email || !password) {
-      Alert.alert('Error', 'All fields are required.');
+      setError('All fields are required.');
       return;
     }
-
+  
+    if (!emailRegex.test(email)) {
+      setError('Invalid email format.');
+      return;
+    }
+  
     if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters.');
+      setError('Password minimum 6 characters.');
       return;
     }
-
-    await signup({ name, email, password });
+  
+    setLoading(true);
+  
+    const result = await signup({
+      name,
+      email,
+      password,
+    });
+  
+    if (result) {
+      setError(result);
+    }
+  
+    setLoading(false);
   };
 
   return (
@@ -59,14 +85,22 @@ const SignupScreen = ({ navigation }: any) => {
           value={password}
           onChangeText={setPassword}
         />
+        {!!error && <Text style={styles.error}>{error}</Text>}
         <TouchableOpacity onPress={() => setSecure(!secure)}>
           <Text>{secure ? '👁️' : '🙈'}</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={onSignup}>
-        <Text style={styles.buttonText}>Signup</Text>
-      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onSignup}
+        disabled={loading}>
+        {loading ? (
+            <ActivityIndicator color="#fff" />
+        ) : (
+            <Text style={styles.buttonText}>Signup</Text>
+        )}
+    </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.link}>Go to Login</Text>
@@ -125,5 +159,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#007AFF',
     fontWeight: '600',
+  },
+  error: {
+    color: '#e53935',
+    marginBottom: 14,
+    fontSize: 13,
   },
 });

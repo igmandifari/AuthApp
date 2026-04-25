@@ -22,25 +22,28 @@ const LoginScreen = ({ navigation }: any) => {
 
   const onLogin = async () => {
     setError('');
-
-    if (!email.includes('@')) {
-      setError('Please enter valid email');
+  
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    if (!emailRegex.test(email)) {
+      setError('Invalid email format.');
       return;
     }
-
-    if (password.length < 6) {
-      setError('Password minimum 6 characters');
+  
+    if (!password) {
+      setError('Password is required.');
       return;
     }
-
+  
     setLoading(true);
-
+  
     const result = await login({ email, password });
-
+  
     if (result) {
       setError(result);
     }
-
+  
     setLoading(false);
   };
 

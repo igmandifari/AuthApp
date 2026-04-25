@@ -5,7 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 
@@ -14,55 +16,93 @@ const LoginScreen = ({ navigation }: any) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const [secure, setSecure] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const onLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'All fields are required.');
+    setError('');
+
+    if (!email.includes('@')) {
+      setError('Please enter valid email');
       return;
     }
+
+    if (password.length < 6) {
+      setError('Password minimum 6 characters');
+      return;
+    }
+
+    setLoading(true);
 
     const result = await login({ email, password });
 
     if (result) {
-      Alert.alert('Login Failed', result);
+      setError(result);
     }
+
+    setLoading(false);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.logo}>🔐</Text>
+        <Text style={styles.title}>Welcome</Text>
+        <Text style={styles.subtitle}>
+          Login to continue your account
+        </Text>
 
-      <TextInput
-        placeholder="Email"
-        style={styles.input}
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-      />
-
-      <View style={styles.passwordBox}>
         <TextInput
-          placeholder="Password"
-          style={styles.passwordInput}
-          secureTextEntry={secure}
-          value={password}
-          onChangeText={setPassword}
+          placeholder="Email Address"
+          placeholderTextColor="#999"
+          style={styles.input}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
         />
-        <TouchableOpacity onPress={() => setSecure(!secure)}>
-          <Text>{secure ? '👁️' : '🙈'}</Text>
+
+        <View style={styles.passwordBox}>
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#999"
+            style={styles.passwordInput}
+            secureTextEntry={secure}
+            value={password}
+            onChangeText={setPassword}
+          />
+
+          <TouchableOpacity onPress={() => setSecure(!secure)}>
+            <Text style={styles.eye}>
+              {secure ? '👁️' : '🙈'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {!!error && <Text style={styles.error}>{error}</Text>}
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={onLogin}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Login</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Signup')}>
+          <Text style={styles.link}>
+            Don't have account? Signup
+          </Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.button} onPress={onLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.link}>Go to Signup</Text>
-      </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -71,50 +111,84 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    backgroundColor: '#f5f7fb',
     justifyContent: 'center',
+    padding: 24,
+  },
+  card: {
     backgroundColor: '#fff',
+    borderRadius: 22,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 15,
+    elevation: 4,
+  },
+  logo: {
+    fontSize: 42,
+    textAlign: 'center',
+    marginBottom: 8,
   },
   title: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: '700',
-    marginBottom: 30,
     textAlign: 'center',
+    color: '#111',
+  },
+  subtitle: {
+    textAlign: 'center',
+    color: '#777',
+    marginTop: 6,
+    marginBottom: 28,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 14,
-    borderRadius: 12,
-    marginBottom: 16,
+    borderColor: '#ececec',
+    backgroundColor: '#fafafa',
+    padding: 16,
+    borderRadius: 14,
+    marginBottom: 14,
+    fontSize: 15,
   },
   passwordBox: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    marginBottom: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ececec',
+    backgroundColor: '#fafafa',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    marginBottom: 14,
   },
   passwordInput: {
     flex: 1,
-    paddingVertical: 14,
+    paddingVertical: 16,
+    fontSize: 15,
+  },
+  eye: {
+    fontSize: 18,
+  },
+  error: {
+    color: '#e53935',
+    marginBottom: 14,
+    fontSize: 13,
   },
   button: {
     backgroundColor: '#111',
     padding: 16,
-    borderRadius: 12,
-    marginBottom: 18,
+    borderRadius: 14,
+    marginTop: 4,
   },
   buttonText: {
     color: '#fff',
     textAlign: 'center',
     fontWeight: '700',
+    fontSize: 15,
   },
   link: {
+    marginTop: 18,
     textAlign: 'center',
-    color: '#007AFF',
+    color: '#2563eb',
     fontWeight: '600',
   },
 });
